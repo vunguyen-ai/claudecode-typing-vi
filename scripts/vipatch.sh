@@ -3,9 +3,16 @@
 # Usage: claude-vipatch [patch|restore|status]
 # Patches the native Claude Code binary directly.
 
-# Resolve HOME on Windows: PowerShell doesn't export $HOME, fall back to $USERPROFILE
+# Resolve HOME for Windows environments (Git Bash + WSL)
 if [[ -z "$HOME" && -n "$USERPROFILE" ]]; then
+    # Git Bash: PowerShell doesn't export $HOME, fall back to $USERPROFILE
     HOME=$(cygpath -u "$USERPROFILE" 2>/dev/null || echo "$USERPROFILE")
+elif grep -qi "microsoft\|wsl" /proc/version 2>/dev/null; then
+    # WSL: Claude Code is a Windows app, resolve Windows home via cmd.exe
+    _WIN_PROFILE=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')
+    if [[ -n "$_WIN_PROFILE" && "$_WIN_PROFILE" != *"%"* ]]; then
+        HOME=$(wslpath -u "$_WIN_PROFILE" 2>/dev/null || echo "$_WIN_PROFILE")
+    fi
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -36,6 +43,17 @@ find_claude_binary() {
                 "/usr/local/bin/claude"; do
         [[ -f "$path" ]] && echo "$path" && return 0
     done
+
+    # WSL fallback: use Windows PATH via cmd.exe
+    if command -v cmd.exe &>/dev/null; then
+        local win_bin
+        win_bin=$(cmd.exe /c "where claude" 2>/dev/null | tr -d '\r' | head -1)
+        if [[ -n "$win_bin" ]]; then
+            local unix_bin
+            unix_bin=$(wslpath -u "$win_bin" 2>/dev/null || echo "$win_bin")
+            [[ -f "$unix_bin" ]] && echo "$unix_bin" && return 0
+        fi
+    fi
 
     return 1
 }

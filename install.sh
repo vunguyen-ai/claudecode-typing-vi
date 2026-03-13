@@ -17,9 +17,16 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 REPO_URL="https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main"
 
-# Resolve HOME on Windows: PowerShell doesn't export $HOME, fall back to $USERPROFILE
+# Resolve HOME for Windows environments (Git Bash + WSL)
 if [[ -z "$HOME" && -n "$USERPROFILE" ]]; then
+    # Git Bash: PowerShell doesn't export $HOME, fall back to $USERPROFILE
     HOME=$(cygpath -u "$USERPROFILE" 2>/dev/null || echo "$USERPROFILE")
+elif grep -qi "microsoft\|wsl" /proc/version 2>/dev/null; then
+    # WSL: Claude Code is a Windows app, resolve Windows home via cmd.exe
+    _WIN_PROFILE=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')
+    if [[ -n "$_WIN_PROFILE" && "$_WIN_PROFILE" != *"%"* ]]; then
+        HOME=$(wslpath -u "$_WIN_PROFILE" 2>/dev/null || echo "$_WIN_PROFILE")
+    fi
 fi
 
 TARGET_DIR="$HOME/.claude/scripts"
@@ -50,6 +57,13 @@ else
     elif [[ -f "$HOME/.local/bin/claude.exe" ]]; then
         CLAUDE_BIN="$HOME/.local/bin/claude.exe"
     fi
+    # WSL fallback: use Windows PATH via cmd.exe
+    if [[ -z "$CLAUDE_BIN" ]] && command -v cmd.exe &>/dev/null; then
+        _WIN_BIN=$(cmd.exe /c "where claude" 2>/dev/null | tr -d '\r' | head -1)
+        if [[ -n "$_WIN_BIN" ]]; then
+            CLAUDE_BIN=$(wslpath -u "$_WIN_BIN" 2>/dev/null || echo "$_WIN_BIN")
+        fi
+    fi
 fi
 
 if [[ -z "$CLAUDE_BIN" ]]; then
@@ -57,6 +71,9 @@ if [[ -z "$CLAUDE_BIN" ]]; then
     echo "    Checked (HOME=$HOME):"
     echo "      - claude in \$PATH: $(command -v claude 2>/dev/null || echo 'not found')"
     echo "      - $HOME/.local/bin/claude(.exe): not found"
+    if command -v cmd.exe &>/dev/null; then
+        echo "      - cmd.exe where claude: $(cmd.exe /c 'where claude' 2>/dev/null | tr -d '\r' | head -1 || echo 'not found')"
+    fi
     echo ""
     echo "    If Claude Code IS installed, find it and retry:"
     echo "      CLAUDE_BIN=/path/to/claude bash install.sh"

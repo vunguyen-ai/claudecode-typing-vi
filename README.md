@@ -114,6 +114,43 @@ claudecode-typing-vi/
 
 ---
 
+## Uninstall
+
+### macOS / Linux
+
+```bash
+# 1. Restore original cli.js
+claude-vi-patch restore
+
+# 2. Remove scripts
+rm -f ~/.claude/scripts/vietnamese-ime-patch.sh \
+      ~/.claude/scripts/vietnamese-ime-patch-core.py \
+      ~/.claude/scripts/patch_block_handler.py \
+      ~/.claude/scripts/claude-update-wrapper.sh
+
+# 3. Remove aliases from ~/.zshrc or ~/.bashrc — delete these lines:
+#    # Vietnamese IME fix for Claude Code
+#    alias claude-vi-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"
+#    alias claude-update="$HOME/.claude/scripts/claude-update-wrapper.sh"
+```
+
+### Windows (PowerShell)
+
+```powershell
+# 1. Restore original cli.js
+claude-vi-patch restore
+
+# 2. Remove scripts
+Remove-Item "$env:USERPROFILE\.claude\scripts\vietnamese-ime-patch*" -Force
+Remove-Item "$env:USERPROFILE\.claude\scripts\patch_block_handler.py" -Force
+Remove-Item "$env:USERPROFILE\.claude\scripts\claude-update-wrapper.ps1" -Force
+
+# 3. Edit PowerShell profile — remove claude-vi-patch and claude-update functions
+notepad $PROFILE.CurrentUserAllHosts
+```
+
+---
+
 ## Credits
 
 Original idea: 

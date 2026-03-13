@@ -1,5 +1,5 @@
 # Claude Code Vietnamese IME Fix - Windows Installer
-# https://github.com/hangocduong/sua-loi-nhap-lieu-tieng-viet-claude-code-cli
+# https://github.com/vunguyen-ai/claudecode-typing-vi
 
 $ErrorActionPreference = "Stop"
 
@@ -8,7 +8,7 @@ function Write-Success { param($msg) Write-Host "[OK] $msg" -ForegroundColor Gre
 function Write-Warn { param($msg) Write-Host "[WARN] $msg" -ForegroundColor Yellow }
 function Write-Err { param($msg) Write-Host "[ERROR] $msg" -ForegroundColor Red }
 
-$RepoUrl = "https://raw.githubusercontent.com/hangocduong/sua-loi-nhap-lieu-tieng-viet-claude-code-cli/main"
+$RepoUrl = "https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main"
 $TargetDir = "$env:USERPROFILE\.claude\scripts"
 
 Write-Host ""

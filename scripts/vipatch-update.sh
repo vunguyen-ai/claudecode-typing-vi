@@ -5,12 +5,12 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Find patch script - check both local dir and installed location
-if [[ -f "$SCRIPT_DIR/vi-patch.sh" ]]; then
-    PATCH_SCRIPT="$SCRIPT_DIR/vi-patch.sh"
-elif [[ -f "$HOME/.claude/scripts/vi-patch.sh" ]]; then
-    PATCH_SCRIPT="$HOME/.claude/scripts/vi-patch.sh"
+if [[ -f "$SCRIPT_DIR/vipatch.sh" ]]; then
+    PATCH_SCRIPT="$SCRIPT_DIR/vipatch.sh"
+elif [[ -f "$HOME/.claude/scripts/vipatch.sh" ]]; then
+    PATCH_SCRIPT="$HOME/.claude/scripts/vipatch.sh"
 else
-    echo "Error: vi-patch.sh not found"
+    echo "Error: vipatch.sh not found"
     exit 1
 fi
 

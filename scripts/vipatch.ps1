@@ -1,5 +1,5 @@
 # Claude Code Vietnamese IME Patch - Entry point (Windows)
-# Usage: claude-vi-patch [patch|restore|status]
+# Usage: claude-vipatch [patch|restore|status]
 
 param(
     [string]$Action = "patch"
@@ -7,7 +7,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PythonScript = Join-Path $ScriptDir "vi_patch_core.py"
+$PythonScript = Join-Path $ScriptDir "vipatch_core.py"
 
 if (!(Test-Path $PythonScript)) {
     Write-Host "Error: Core script not found: $PythonScript" -ForegroundColor Red

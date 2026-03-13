@@ -5,13 +5,13 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Find patch script
-$PatchScript = Join-Path $ScriptDir "vi-patch.ps1"
+$PatchScript = Join-Path $ScriptDir "vipatch.ps1"
 if (!(Test-Path $PatchScript)) {
-    $PatchScript = "$env:USERPROFILE\.claude\scripts\vi-patch.ps1"
+    $PatchScript = "$env:USERPROFILE\.claude\scripts\vipatch.ps1"
 }
 
 if (!(Test-Path $PatchScript)) {
-    Write-Host "Error: vi-patch.ps1 not found" -ForegroundColor Red
+    Write-Host "Error: vipatch.ps1 not found" -ForegroundColor Red
     exit 1
 }
 

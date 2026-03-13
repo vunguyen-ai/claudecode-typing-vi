@@ -29,12 +29,12 @@ irm https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main/inst
 
 | Command                  | Description                          |
 |--------------------------|--------------------------------------|
-| `claude-vi-patch`        | Apply patch                          |
-| `claude-vi-patch status` | Check patch status                   |
-| `claude-vi-patch restore`| Restore original (remove patch)      |
+| `claude-vipatch`        | Apply patch                          |
+| `claude-vipatch status` | Check patch status                   |
+| `claude-vipatch restore`| Restore original (remove patch)      |
 | `claude-update`          | Update Claude Code + auto re-patch   |
 
-> After every Claude Code update, re-run `claude-vi-patch` or use `claude-update`.
+> After every Claude Code update, re-run `claude-vipatch` or use `claude-update`.
 
 ---
 
@@ -77,11 +77,11 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 | Error                                | Solution                                                                                                              |
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | Vietnamese input still broken        | Restart Claude Code: `Ctrl+C`, then `claude`                                                                          |
-| `claude-vi-patch: command not found` | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
+| `claude-vipatch: command not found` | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
 | "Could not find Claude Code cli.js"  | Install via npm: `npm install -g @anthropic-ai/claude-code`                                                           |
 | "Could not extract variables"        | Incompatible Claude Code version. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues) with `claude --version` |
 | "Could not find DEL handling block"  | Claude Code structure changed. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues)               |
-| "Patch already applied"              | Already patched. Check: `claude-vi-patch status`                                                                      |
+| "Patch already applied"              | Already patched. Check: `claude-vipatch status`                                                                      |
 
 ---
 
@@ -104,12 +104,12 @@ claudecode-typing-vi/
 ├── LICENSE
 ├── README.md
 └── scripts/
-    ├── vi-patch.sh                      # Entry point (Bash)
-    ├── vi-patch.ps1                     # Entry point (PowerShell)
-    ├── vi_patch_core.py                 # Core patching logic
-    ├── vi_patch_block_handler.py        # Block replacement module
-    ├── vi-patch-update.sh               # Update + patch (Bash)
-    └── vi-patch-update.ps1              # Update + patch (PowerShell)
+    ├── vipatch.sh                      # Entry point (Bash)
+    ├── vipatch.ps1                     # Entry point (PowerShell)
+    ├── vipatch_core.py                 # Core patching logic
+    ├── vipatch_block_handler.py        # Block replacement module
+    ├── vipatch-update.sh               # Update + patch (Bash)
+    └── vipatch-update.ps1              # Update + patch (PowerShell)
 ```
 
 ---
@@ -120,28 +120,27 @@ claudecode-typing-vi/
 
 ```bash
 # 1. Restore original cli.js
-claude-vi-patch restore
+claude-vipatch restore
 
-# 2. Remove all scripts (all prefixed with vi-patch / vi_patch)
-rm -f ~/.claude/scripts/vi-patch* ~/.claude/scripts/vi_patch*
+# 2. Remove all scripts (all prefixed with vipatch)
+rm -f ~/.claude/scripts/vipatch*
 
 # 3. Remove aliases from ~/.zshrc or ~/.bashrc — delete these lines:
 #    # Vietnamese IME fix for Claude Code
-#    alias claude-vi-patch="$HOME/.claude/scripts/vi-patch.sh"
-#    alias claude-update="$HOME/.claude/scripts/vi-patch-update.sh"
+#    alias claude-vipatch="$HOME/.claude/scripts/vipatch.sh"
+#    alias claude-update="$HOME/.claude/scripts/vipatch-update.sh"
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
 # 1. Restore original cli.js
-claude-vi-patch restore
+claude-vipatch restore
 
-# 2. Remove all scripts (all prefixed with vi-patch / vi_patch)
-Remove-Item "$env:USERPROFILE\.claude\scripts\vi-patch*" -Force
-Remove-Item "$env:USERPROFILE\.claude\scripts\vi_patch*" -Force
+# 2. Remove all scripts (all prefixed with vipatch)
+Remove-Item "$env:USERPROFILE\.claude\scripts\vipatch*" -Force
 
-# 3. Edit PowerShell profile — remove claude-vi-patch and claude-update functions
+# 3. Edit PowerShell profile — remove claude-vipatch and claude-update functions
 notepad $PROFILE.CurrentUserAllHosts
 ```
 

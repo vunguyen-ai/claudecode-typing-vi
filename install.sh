@@ -16,6 +16,12 @@ log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 REPO_URL="https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main"
+
+# Resolve HOME on Windows: PowerShell doesn't export $HOME, fall back to $USERPROFILE
+if [[ -z "$HOME" && -n "$USERPROFILE" ]]; then
+    HOME=$(cygpath -u "$USERPROFILE" 2>/dev/null || echo "$USERPROFILE")
+fi
+
 TARGET_DIR="$HOME/.claude/scripts"
 
 echo ""
@@ -32,19 +38,30 @@ if ! command -v python3 &>/dev/null; then
 fi
 log_success "Python 3 found"
 
-# Check Claude Code (native install)
-CLAUDE_BIN=""
-if command -v claude &>/dev/null; then
-    CLAUDE_BIN=$(which claude)
-elif [[ -f "$HOME/.local/bin/claude" ]]; then
-    CLAUDE_BIN="$HOME/.local/bin/claude"
-elif [[ -f "$HOME/.local/bin/claude.exe" ]]; then
-    CLAUDE_BIN="$HOME/.local/bin/claude.exe"
+# Check Claude Code (native install) — supports CLAUDE_BIN override
+if [[ -n "$CLAUDE_BIN" && -f "$CLAUDE_BIN" ]]; then
+    log_info "Using CLAUDE_BIN override: $CLAUDE_BIN"
+else
+    CLAUDE_BIN=""
+    if command -v claude &>/dev/null; then
+        CLAUDE_BIN=$(which claude)
+    elif [[ -f "$HOME/.local/bin/claude" ]]; then
+        CLAUDE_BIN="$HOME/.local/bin/claude"
+    elif [[ -f "$HOME/.local/bin/claude.exe" ]]; then
+        CLAUDE_BIN="$HOME/.local/bin/claude.exe"
+    fi
 fi
 
 if [[ -z "$CLAUDE_BIN" ]]; then
     log_error "Claude Code not found"
-    echo "    Install from: https://docs.anthropic.com/en/docs/claude-code/overview"
+    echo "    Checked (HOME=$HOME):"
+    echo "      - claude in \$PATH: $(command -v claude 2>/dev/null || echo 'not found')"
+    echo "      - $HOME/.local/bin/claude(.exe): not found"
+    echo ""
+    echo "    If Claude Code IS installed, find it and retry:"
+    echo "      CLAUDE_BIN=/path/to/claude bash install.sh"
+    echo ""
+    echo "    If not installed: https://docs.anthropic.com/en/docs/claude-code/overview"
     exit 1
 fi
 CLAUDE_VERSION=$("$CLAUDE_BIN" --version 2>/dev/null | head -1) || CLAUDE_VERSION="unknown"

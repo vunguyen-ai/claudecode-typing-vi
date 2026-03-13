@@ -3,6 +3,11 @@
 # Usage: claude-vipatch [patch|restore|status]
 # Patches the native Claude Code binary directly.
 
+# Resolve HOME on Windows: PowerShell doesn't export $HOME, fall back to $USERPROFILE
+if [[ -z "$HOME" && -n "$USERPROFILE" ]]; then
+    HOME=$(cygpath -u "$USERPROFILE" 2>/dev/null || echo "$USERPROFILE")
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_SCRIPT="$SCRIPT_DIR/vipatch_core.py"
 
@@ -11,7 +16,7 @@ if [[ ! -f "$PYTHON_SCRIPT" ]]; then
     exit 1
 fi
 
-# Find the native Claude Code binary
+# Find the native Claude Code binary — supports CLAUDE_BIN override
 find_claude_binary() {
     local bin_path
 
@@ -35,10 +40,20 @@ find_claude_binary() {
     return 1
 }
 
-CLAUDE_BIN=$(find_claude_binary)
+if [[ -n "$CLAUDE_BIN" && -f "$CLAUDE_BIN" ]]; then
+    : # Use CLAUDE_BIN override from environment
+else
+    CLAUDE_BIN=$(find_claude_binary)
+fi
 if [[ -z "$CLAUDE_BIN" ]]; then
     echo "Error: Could not find Claude Code binary."
-    echo "Install Claude Code first: https://docs.anthropic.com/en/docs/claude-code/overview"
+    echo "  Checked (HOME=$HOME):"
+    echo "    - claude in \$PATH: $(command -v claude 2>/dev/null || echo 'not found')"
+    echo "    - $HOME/.local/bin/claude(.exe): not found"
+    echo "    - /usr/local/bin/claude: not found"
+    echo ""
+    echo "  Manual override: CLAUDE_BIN=/path/to/claude $0 $*"
+    echo "  Install: https://docs.anthropic.com/en/docs/claude-code/overview"
     exit 1
 fi
 

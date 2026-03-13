@@ -1,6 +1,8 @@
 # Vietnamese IME Fix for Claude Code — Technical Deep Dive
 
-> How Vietnamese input methods break Claude Code, how the stack-based algorithm fixes it, and how the patch applies itself to minified JavaScript.
+> How Vietnamese input methods break Claude Code, how the stack-based algorithm fixes it, and how the patch applies itself to the native binary's embedded JavaScript.
+>
+> **Note:** The original idea of patching `cli.js` came from [manhit96](https://github.com/manhit96/claude-code-vietnamese-fix) and [hangocduong](https://github.com/hangocduong/sua-loi-nhap-lieu-tieng-viet-claude-code-cli) (npm installs only). This project (v2.0+) extends the approach to native binary patching.
 
 ---
 

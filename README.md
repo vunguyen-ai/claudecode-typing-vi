@@ -131,9 +131,11 @@ claudecode-typing-vi/
 
 ## Credits
 
-Original idea:
+Original idea (npm version only — patched `cli.js` text file):
 - [manhit96/claude-code-vietnamese-fix](https://github.com/manhit96/claude-code-vietnamese-fix)
 - https://github.com/hangocduong/sua-loi-nhap-lieu-tieng-viet-claude-code-cli
+
+This project (v2.0+) extends the approach to **native binary patching** — replacing the DEL handler directly inside the compiled executable.
 
 ## License
 

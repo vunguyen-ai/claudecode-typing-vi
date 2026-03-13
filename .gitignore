@@ -13,5 +13,8 @@ __pycache__/
 .vscode/
 .idea/
 
+# Claude Code session artifacts
+.claude/
+
 # Backups
 *.backup.*

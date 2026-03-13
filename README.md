@@ -26,9 +26,9 @@ curl -fsSL https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/ma
 | `claude-vipatch`         | Apply patch                          |
 | `claude-vipatch status`  | Check patch status                   |
 | `claude-vipatch restore` | Restore original (remove patch)      |
-| `claude-update`          | Update Claude Code + auto re-patch   |
+| `claude-update`          | Re-apply patch after updates         |
 
-> After every Claude Code update, re-run `claude-vipatch` or use `claude-update`.
+> After Claude Code auto-updates, re-run `claude-vipatch` or use `claude-update`.
 
 ---
 
@@ -43,26 +43,39 @@ Vietnamese IMEs use a **backspace-then-replace** technique to transform characte
 
 ## The Fix
 
-Replaces the entire DEL handling block in Claude Code's `cli.js` with a **stack-based algorithm**:
+Replaces the entire DEL handling block inside Claude Code's binary with a **stack-based algorithm**:
 
 ```javascript
-let _ns = state, _sk = [];
+let n = state, k = [];
 
 for (const c of input) {
   if (c === "\x7f") {
-    if (_sk.length > 0) _sk.pop();    // DEL consumes pending char
-    else _ns = _ns.backspace();        // DEL affects existing state
+    if (k.length > 0) k.pop();     // DEL consumes pending char
+    else n = n.backspace();          // DEL affects existing state
   } else {
-    _sk.push(c);                       // Normal char: push to stack
+    k.push(c);                       // Normal char: push to stack
   }
 }
 
-for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
+for (const c of k) n = n.insert(c);  // Insert survivors
 ```
 
 - Single-pass processing (no double handling)
 - Sequential — DEL only affects the character immediately before it
 - Stable under fast typing
+
+---
+
+## How It Works
+
+Claude Code ships as a **native binary** with JavaScript embedded inside. This tool:
+
+1. Finds the Claude Code binary (`~/.local/bin/claude`)
+2. Locates the DEL handling block in the embedded JavaScript
+3. Replaces it with the stack-based algorithm (exact same byte count)
+4. On macOS: strips and re-applies code signature (ad-hoc)
+
+See [`docs/how-vietnamese-ime-fix-works.md`](docs/how-vietnamese-ime-fix-works.md) for technical details.
 
 ---
 
@@ -72,9 +85,9 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | Vietnamese input still broken        | Restart Claude Code: `Ctrl+C`, then `claude`                                                                          |
 | `claude-vipatch: command not found`  | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
-| "Could not find Claude Code cli.js"  | Install via npm: `npm install -g @anthropic-ai/claude-code`                                                           |
-| "Could not extract variables"        | Incompatible Claude Code version. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues) with `claude --version` |
-| "Could not find DEL handling block"  | Claude Code structure changed. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues)               |
+| "Could not find Claude Code binary"  | Install Claude Code: https://docs.anthropic.com/en/docs/claude-code/overview                                          |
+| "Could not find DEL handling block"  | Claude Code version may be incompatible. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues) with `claude --version` |
+| "Replacement patch too large"        | Variable names changed significantly. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues)        |
 | "Patch already applied"              | Already patched. Check: `claude-vipatch status`                                                                       |
 
 ---
@@ -85,7 +98,7 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 |----------------|------------------------------------------------------|
 | **Python**     | 3.6+                                                 |
 | **Bash**       | macOS/Linux (built-in), Windows ([Git Bash](https://git-scm.com/downloads) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)) |
-| **Claude Code**| Installed via npm: `npm install -g @anthropic-ai/claude-code` |
+| **Claude Code**| Native install (https://docs.anthropic.com/en/docs/claude-code/overview) |
 
 ---
 
@@ -95,7 +108,7 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 ~/.claude/scripts/vipatch-uninstall.sh
 ```
 
-Restores original `cli.js`, removes all scripts, cleans shell aliases, then self-deletes.
+Restores original binary, removes all scripts, cleans shell aliases, then self-deletes.
 
 ---
 
@@ -108,9 +121,9 @@ claudecode-typing-vi/
 ├── README.md
 └── scripts/
     ├── vipatch.sh                       # Entry point
-    ├── vipatch_core.py                  # Core patching logic
-    ├── vipatch_block_handler.py         # Block replacement module
-    ├── vipatch-update.sh                # Update Claude Code + re-patch
+    ├── vipatch_core.py                  # Core binary patching logic
+    ├── vipatch_block_handler.py         # Block detection & replacement
+    ├── vipatch-update.sh                # Re-apply patch after updates
     └── vipatch-uninstall.sh             # Uninstaller (self-deleting)
 ```
 

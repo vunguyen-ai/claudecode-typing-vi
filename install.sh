@@ -32,14 +32,24 @@ if ! command -v python3 &>/dev/null; then
 fi
 log_success "Python 3 found"
 
-# Check Claude Code
-if ! command -v claude &>/dev/null; then
+# Check Claude Code (native install)
+CLAUDE_BIN=""
+if command -v claude &>/dev/null; then
+    CLAUDE_BIN=$(which claude)
+elif [[ -f "$HOME/.local/bin/claude" ]]; then
+    CLAUDE_BIN="$HOME/.local/bin/claude"
+elif [[ -f "$HOME/.local/bin/claude.exe" ]]; then
+    CLAUDE_BIN="$HOME/.local/bin/claude.exe"
+fi
+
+if [[ -z "$CLAUDE_BIN" ]]; then
     log_error "Claude Code not found"
-    echo "    Install with: npm install -g @anthropic-ai/claude-code"
+    echo "    Install from: https://docs.anthropic.com/en/docs/claude-code/overview"
     exit 1
 fi
-CLAUDE_VERSION=$(claude --version 2>/dev/null | head -1)
+CLAUDE_VERSION=$("$CLAUDE_BIN" --version 2>/dev/null | head -1) || CLAUDE_VERSION="unknown"
 log_success "Claude Code found: $CLAUDE_VERSION"
+log_info "Binary: $CLAUDE_BIN"
 
 # Create target directory
 mkdir -p "$TARGET_DIR"
@@ -49,7 +59,6 @@ log_info "Target: $TARGET_DIR"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" || SCRIPT_DIR=""
 
 if [[ -n "$SCRIPT_DIR" && -f "$SCRIPT_DIR/scripts/vipatch.sh" ]]; then
-    # Local installation from cloned repo
     log_info "Installing from local repo..."
     cp "$SCRIPT_DIR/scripts/vipatch.sh" "$TARGET_DIR/"
     cp "$SCRIPT_DIR/scripts/vipatch_core.py" "$TARGET_DIR/"
@@ -57,7 +66,6 @@ if [[ -n "$SCRIPT_DIR" && -f "$SCRIPT_DIR/scripts/vipatch.sh" ]]; then
     cp "$SCRIPT_DIR/scripts/vipatch-update.sh" "$TARGET_DIR/"
     cp "$SCRIPT_DIR/scripts/vipatch-uninstall.sh" "$TARGET_DIR/"
 else
-    # Remote installation via curl
     log_info "Downloading scripts from GitHub..."
     curl -fsSL "$REPO_URL/scripts/vipatch.sh" -o "$TARGET_DIR/vipatch.sh"
     curl -fsSL "$REPO_URL/scripts/vipatch_core.py" -o "$TARGET_DIR/vipatch_core.py"
@@ -88,7 +96,6 @@ if [[ -n "$SHELL_CONFIG" ]]; then
     ALIAS_LINE1='alias claude-vipatch="$HOME/.claude/scripts/vipatch.sh"'
     ALIAS_LINE2='alias claude-update="$HOME/.claude/scripts/vipatch-update.sh"'
 
-
     if ! grep -q "claude-vipatch" "$SHELL_CONFIG" 2>/dev/null; then
         echo "" >> "$SHELL_CONFIG"
         echo "# Vietnamese IME fix for Claude Code" >> "$SHELL_CONFIG"
@@ -111,20 +118,12 @@ PATCH_RESULT=$("$TARGET_DIR/vipatch.sh" patch 2>&1) || true
 echo "$PATCH_RESULT"
 
 echo ""
-echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║  ✓ CÀI ĐẶT THÀNH CÔNG!                                       ║"
-echo "╠══════════════════════════════════════════════════════════════╣"
-echo "║                                                              ║"
-echo "║  ⚠️  QUAN TRỌNG: Thoát và khởi động lại Claude Code          ║"
-echo "║     để bản vá có hiệu lực!                                   ║"
-echo "║                                                              ║"
-echo "║  Nhấn Ctrl+C để thoát phiên hiện tại, sau đó chạy: claude    ║"
-echo "║                                                              ║"
-echo "╚══════════════════════════════════════════════════════════════╝"
+echo -e "${GREEN}Installation complete!${NC}"
+echo -e "${YELLOW}Restart Claude Code to apply: Ctrl+C, then run: claude${NC}"
 echo ""
-echo -e "${YELLOW}Lệnh khả dụng (sau khi restart terminal hoặc chạy 'source $SHELL_CONFIG'):${NC}"
-echo ""
-echo "  claude-vipatch        Áp dụng bản vá"
-echo "  claude-vipatch status Kiểm tra trạng thái"
-echo "  claude-update          Cập nhật Claude + tự động vá"
+echo "Commands (after restarting terminal):"
+echo "  claude-vipatch         Apply patch"
+echo "  claude-vipatch status  Check patch status"
+echo "  claude-vipatch restore Restore original"
+echo "  claude-update          Re-apply patch after updates"
 echo ""

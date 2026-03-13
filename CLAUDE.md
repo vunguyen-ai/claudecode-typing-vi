@@ -1,47 +1,28 @@
 # Claude Code Vietnamese IME Fix
 
 ## Project Overview
-This project provides a patch to fix Vietnamese IME input issues in Claude Code CLI.
+This project patches the native Claude Code binary to fix Vietnamese IME input issues.
+It works by replacing the DEL handling block in the embedded JavaScript with a stack-based algorithm.
 
-## Important Commands
+## Important Notes
 
-### Updating Claude Code
-When asked to update Claude Code, ALWAYS use npm (NOT brew):
+- Patches the **native binary** directly (not npm cli.js)
+- On macOS: strips and re-applies code signature (ad-hoc) during patching
+
+## Commands
 
 ```bash
-npm update -g @anthropic-ai/claude-code
-```
-
-Then apply the Vietnamese IME patch:
-```bash
-~/.claude/scripts/vipatch.sh patch
-```
-
-Or use the wrapper script that does both:
-```bash
-~/.claude/scripts/vipatch-update.sh
-```
-
-**DO NOT use `brew upgrade claude`** - that's for Claude Desktop app, not Claude Code CLI.
-
-### Applying Patch Only
-```bash
-~/.claude/scripts/vipatch.sh patch
-```
-
-### Check Patch Status
-```bash
-~/.claude/scripts/vipatch.sh status
-```
-
-### Restore Original
-```bash
-~/.claude/scripts/vipatch.sh restore
+~/.claude/scripts/vipatch.sh patch      # Apply patch
+~/.claude/scripts/vipatch.sh status     # Check status
+~/.claude/scripts/vipatch.sh restore    # Restore original
+~/.claude/scripts/vipatch-update.sh     # Re-apply patch after updates
+~/.claude/scripts/vipatch-uninstall.sh  # Full uninstall
 ```
 
 ## File Structure
-- `scripts/vipatch.sh` - Main patch script
-- `scripts/vipatch_core.py` - Python core logic
-- `scripts/vipatch_block_handler.py` - Block handler module
-- `scripts/vipatch-update.sh` - Update + auto-patch wrapper
+- `scripts/vipatch.sh` - Entry point (finds claude binary, dispatches to Python)
+- `scripts/vipatch_core.py` - Core binary patching logic
+- `scripts/vipatch_block_handler.py` - Block detection & replacement module
+- `scripts/vipatch-update.sh` - Re-apply patch after updates
+- `scripts/vipatch-uninstall.sh` - Self-deleting uninstaller
 - `install.sh` - Installation script

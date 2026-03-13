@@ -1,6 +1,6 @@
 #!/bin/bash
 # Vietnamese IME Patch - Uninstaller
-# Restores original cli.js, removes all vipatch scripts, cleans shell aliases
+# Restores original binary, removes all vipatch scripts, cleans shell aliases
 
 set -e
 
@@ -16,9 +16,9 @@ echo ""
 echo -e "${YELLOW}Uninstalling Vietnamese IME Patch...${NC}"
 echo ""
 
-# Step 1: Restore original cli.js
+# Step 1: Restore original binary
 if [[ -f "$SCRIPT_DIR/vipatch.sh" ]]; then
-    echo "Restoring original cli.js..."
+    echo "Restoring original binary..."
     RESTORE_RESULT=$("$SCRIPT_DIR/vipatch.sh" restore 2>&1) || true
     echo "$RESTORE_RESULT"
 else
@@ -28,7 +28,6 @@ fi
 # Step 2: Remove aliases from shell config
 for CONFIG in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile"; do
     if [[ -f "$CONFIG" ]] && grep -q "claude-vipatch\|vipatch" "$CONFIG" 2>/dev/null; then
-        # Remove the alias block (comment + 2 alias lines)
         if [[ "$(uname)" == "Darwin" ]]; then
             sed -i '' '/# Vietnamese IME fix for Claude Code/d' "$CONFIG"
             sed -i '' '/claude-vipatch/d' "$CONFIG"

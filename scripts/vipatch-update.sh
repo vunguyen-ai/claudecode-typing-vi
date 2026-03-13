@@ -1,10 +1,11 @@
 #!/bin/bash
-# Wrapper script: Updates Claude Code and auto-patches Vietnamese IME
+# Re-applies Vietnamese IME patch after Claude Code updates.
+# Native installs auto-update, so this just re-patches.
 # Usage: claude-update
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Find patch script - check both local dir and installed location
+# Find patch script
 if [[ -f "$SCRIPT_DIR/vipatch.sh" ]]; then
     PATCH_SCRIPT="$SCRIPT_DIR/vipatch.sh"
 elif [[ -f "$HOME/.claude/scripts/vipatch.sh" ]]; then
@@ -14,12 +15,10 @@ else
     exit 1
 fi
 
-echo "Updating Claude Code..."
-npm update -g @anthropic-ai/claude-code
-
+echo "Re-applying Vietnamese IME patch..."
+echo "(Native Claude Code auto-updates; this re-patches after an update.)"
 echo ""
-echo "Applying Vietnamese IME patch..."
 "$PATCH_SCRIPT" patch
 
 echo ""
-echo "Done! Claude Code updated and patched."
+echo "Done! Restart Claude Code to apply."

@@ -82,7 +82,7 @@ echo "$RESULT"
 
 # Show restart reminder for patch/restore actions
 if [[ $EXIT_CODE -eq 0 && ("$ACTION" == "patch" || "$ACTION" == "restore" || "$ACTION" == "fix" || "$ACTION" == "apply") ]]; then
-    if echo "$RESULT" | grep -q "successfully\|applied\|Restored"; then
+    if echo "$RESULT" | grep -q "successfully\|Restored" && ! echo "$RESULT" | grep -q "already"; then
         echo ""
         echo -e "\033[1;33m  Restart Claude Code to apply changes!\033[0m"
         echo -e "\033[1;33m  Press Ctrl+C to exit, then run: claude\033[0m"

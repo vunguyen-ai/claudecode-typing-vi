@@ -104,12 +104,12 @@ claudecode-typing-vi/
 ├── LICENSE
 ├── README.md
 └── scripts/
-    ├── vietnamese-ime-patch.sh          # Entry point (Bash)
-    ├── vietnamese-ime-patch.ps1         # Entry point (PowerShell)
-    ├── vietnamese-ime-patch-core.py     # Core patching logic
-    ├── patch_block_handler.py           # Block replacement module
-    ├── claude-update-wrapper.sh         # Update + patch (Bash)
-    └── claude-update-wrapper.ps1        # Update + patch (PowerShell)
+    ├── vi-patch.sh                      # Entry point (Bash)
+    ├── vi-patch.ps1                     # Entry point (PowerShell)
+    ├── vi_patch_core.py                 # Core patching logic
+    ├── vi_patch_block_handler.py        # Block replacement module
+    ├── vi-patch-update.sh               # Update + patch (Bash)
+    └── vi-patch-update.ps1              # Update + patch (PowerShell)
 ```
 
 ---
@@ -122,16 +122,13 @@ claudecode-typing-vi/
 # 1. Restore original cli.js
 claude-vi-patch restore
 
-# 2. Remove scripts
-rm -f ~/.claude/scripts/vietnamese-ime-patch.sh \
-      ~/.claude/scripts/vietnamese-ime-patch-core.py \
-      ~/.claude/scripts/patch_block_handler.py \
-      ~/.claude/scripts/claude-update-wrapper.sh
+# 2. Remove all scripts (all prefixed with vi-patch / vi_patch)
+rm -f ~/.claude/scripts/vi-patch* ~/.claude/scripts/vi_patch*
 
 # 3. Remove aliases from ~/.zshrc or ~/.bashrc — delete these lines:
 #    # Vietnamese IME fix for Claude Code
-#    alias claude-vi-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"
-#    alias claude-update="$HOME/.claude/scripts/claude-update-wrapper.sh"
+#    alias claude-vi-patch="$HOME/.claude/scripts/vi-patch.sh"
+#    alias claude-update="$HOME/.claude/scripts/vi-patch-update.sh"
 ```
 
 ### Windows (PowerShell)
@@ -140,10 +137,9 @@ rm -f ~/.claude/scripts/vietnamese-ime-patch.sh \
 # 1. Restore original cli.js
 claude-vi-patch restore
 
-# 2. Remove scripts
-Remove-Item "$env:USERPROFILE\.claude\scripts\vietnamese-ime-patch*" -Force
-Remove-Item "$env:USERPROFILE\.claude\scripts\patch_block_handler.py" -Force
-Remove-Item "$env:USERPROFILE\.claude\scripts\claude-update-wrapper.ps1" -Force
+# 2. Remove all scripts (all prefixed with vi-patch / vi_patch)
+Remove-Item "$env:USERPROFILE\.claude\scripts\vi-patch*" -Force
+Remove-Item "$env:USERPROFILE\.claude\scripts\vi_patch*" -Force
 
 # 3. Edit PowerShell profile — remove claude-vi-patch and claude-update functions
 notepad $PROFILE.CurrentUserAllHosts

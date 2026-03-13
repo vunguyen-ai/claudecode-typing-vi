@@ -48,26 +48,26 @@ log_info "Target: $TARGET_DIR"
 # Determine script source (local repo or remote)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" || SCRIPT_DIR=""
 
-if [[ -n "$SCRIPT_DIR" && -f "$SCRIPT_DIR/scripts/vietnamese-ime-patch.sh" ]]; then
+if [[ -n "$SCRIPT_DIR" && -f "$SCRIPT_DIR/scripts/vi-patch.sh" ]]; then
     # Local installation from cloned repo
     log_info "Installing from local repo..."
-    cp "$SCRIPT_DIR/scripts/vietnamese-ime-patch.sh" "$TARGET_DIR/"
-    cp "$SCRIPT_DIR/scripts/vietnamese-ime-patch-core.py" "$TARGET_DIR/"
-    cp "$SCRIPT_DIR/scripts/patch_block_handler.py" "$TARGET_DIR/"
-    cp "$SCRIPT_DIR/scripts/claude-update-wrapper.sh" "$TARGET_DIR/"
+    cp "$SCRIPT_DIR/scripts/vi-patch.sh" "$TARGET_DIR/"
+    cp "$SCRIPT_DIR/scripts/vi_patch_core.py" "$TARGET_DIR/"
+    cp "$SCRIPT_DIR/scripts/vi_patch_block_handler.py" "$TARGET_DIR/"
+    cp "$SCRIPT_DIR/scripts/vi-patch-update.sh" "$TARGET_DIR/"
 else
     # Remote installation via curl
     log_info "Downloading scripts from GitHub..."
-    curl -fsSL "$REPO_URL/scripts/vietnamese-ime-patch.sh" -o "$TARGET_DIR/vietnamese-ime-patch.sh"
-    curl -fsSL "$REPO_URL/scripts/vietnamese-ime-patch-core.py" -o "$TARGET_DIR/vietnamese-ime-patch-core.py"
-    curl -fsSL "$REPO_URL/scripts/patch_block_handler.py" -o "$TARGET_DIR/patch_block_handler.py"
-    curl -fsSL "$REPO_URL/scripts/claude-update-wrapper.sh" -o "$TARGET_DIR/claude-update-wrapper.sh"
+    curl -fsSL "$REPO_URL/scripts/vi-patch.sh" -o "$TARGET_DIR/vi-patch.sh"
+    curl -fsSL "$REPO_URL/scripts/vi_patch_core.py" -o "$TARGET_DIR/vi_patch_core.py"
+    curl -fsSL "$REPO_URL/scripts/vi_patch_block_handler.py" -o "$TARGET_DIR/vi_patch_block_handler.py"
+    curl -fsSL "$REPO_URL/scripts/vi-patch-update.sh" -o "$TARGET_DIR/vi-patch-update.sh"
 fi
 
 # Make executable
-chmod +x "$TARGET_DIR/vietnamese-ime-patch.sh"
-chmod +x "$TARGET_DIR/vietnamese-ime-patch-core.py"
-chmod +x "$TARGET_DIR/claude-update-wrapper.sh"
+chmod +x "$TARGET_DIR/vi-patch.sh"
+chmod +x "$TARGET_DIR/vi_patch_core.py"
+chmod +x "$TARGET_DIR/vi-patch-update.sh"
 log_success "Scripts installed"
 
 # Detect shell config
@@ -82,8 +82,9 @@ fi
 
 # Add aliases
 if [[ -n "$SHELL_CONFIG" ]]; then
-    ALIAS_LINE1='alias claude-vi-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"'
-    ALIAS_LINE2='alias claude-update="$HOME/.claude/scripts/claude-update-wrapper.sh"'
+    ALIAS_LINE1='alias claude-vi-patch="$HOME/.claude/scripts/vi-patch.sh"'
+    ALIAS_LINE2='alias claude-update="$HOME/.claude/scripts/vi-patch-update.sh"'
+
 
     if ! grep -q "claude-vi-patch" "$SHELL_CONFIG" 2>/dev/null; then
         echo "" >> "$SHELL_CONFIG"
@@ -96,14 +97,14 @@ if [[ -n "$SHELL_CONFIG" ]]; then
     fi
 else
     log_warn "Could not detect shell config. Add manually:"
-    echo '  alias claude-vi-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"'
-    echo '  alias claude-update="$HOME/.claude/scripts/claude-update-wrapper.sh"'
+    echo '  alias claude-vi-patch="$HOME/.claude/scripts/vi-patch.sh"'
+    echo '  alias claude-update="$HOME/.claude/scripts/vi-patch-update.sh"'
 fi
 
 # Apply patch
 echo ""
 log_info "Applying patch..."
-PATCH_RESULT=$("$TARGET_DIR/vietnamese-ime-patch.sh" patch 2>&1)
+PATCH_RESULT=$("$TARGET_DIR/vi-patch.sh" patch 2>&1)
 echo "$PATCH_RESULT"
 
 echo ""

@@ -7,7 +7,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PythonScript = Join-Path $ScriptDir "vietnamese-ime-patch-core.py"
+$PythonScript = Join-Path $ScriptDir "vi_patch_core.py"
 
 if (!(Test-Path $PythonScript)) {
     Write-Host "Error: Core script not found: $PythonScript" -ForegroundColor Red

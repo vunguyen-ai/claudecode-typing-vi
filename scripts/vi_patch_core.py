@@ -13,7 +13,7 @@ from typing import Optional, Dict
 # Import block handler for v1.7+ replacement strategy
 SCRIPT_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPT_DIR))
-import patch_block_handler as block_handler
+import vi_patch_block_handler as block_handler
 
 DEL_CHAR = chr(127)  # 0x7F
 

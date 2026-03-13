@@ -1,10 +1,10 @@
 #!/bin/bash
 # Claude Code Vietnamese IME Patch - Entry point
 # Usage: claude-vi-patch [patch|restore|status]
-# Requires: vietnamese-ime-patch-core.py
+# Requires: vi_patch_core.py
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON_SCRIPT="$SCRIPT_DIR/vietnamese-ime-patch-core.py"
+PYTHON_SCRIPT="$SCRIPT_DIR/vi_patch_core.py"
 
 if [[ ! -f "$PYTHON_SCRIPT" ]]; then
     echo "Error: Core script not found: $PYTHON_SCRIPT"

@@ -14,34 +14,34 @@ npm update -g @anthropic-ai/claude-code
 
 Then apply the Vietnamese IME patch:
 ```bash
-~/.claude/scripts/vietnamese-ime-patch.sh patch
+~/.claude/scripts/vi-patch.sh patch
 ```
 
 Or use the wrapper script that does both:
 ```bash
-~/.claude/scripts/claude-update-wrapper.sh
+~/.claude/scripts/vi-patch-update.sh
 ```
 
 **DO NOT use `brew upgrade claude`** - that's for Claude Desktop app, not Claude Code CLI.
 
 ### Applying Patch Only
 ```bash
-~/.claude/scripts/vietnamese-ime-patch.sh patch
+~/.claude/scripts/vi-patch.sh patch
 ```
 
 ### Check Patch Status
 ```bash
-~/.claude/scripts/vietnamese-ime-patch.sh status
+~/.claude/scripts/vi-patch.sh status
 ```
 
 ### Restore Original
 ```bash
-~/.claude/scripts/vietnamese-ime-patch.sh restore
+~/.claude/scripts/vi-patch.sh restore
 ```
 
 ## File Structure
-- `scripts/vietnamese-ime-patch.sh` - Main patch script
-- `scripts/vietnamese-ime-patch-core.py` - Python core logic
-- `scripts/patch_block_handler.py` - Block handler module
-- `scripts/claude-update-wrapper.sh` - Update + auto-patch wrapper
+- `scripts/vi-patch.sh` - Main patch script
+- `scripts/vi_patch_core.py` - Python core logic
+- `scripts/vi_patch_block_handler.py` - Block handler module
+- `scripts/vi-patch-update.sh` - Update + auto-patch wrapper
 - `install.sh` - Installation script

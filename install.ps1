@@ -46,20 +46,20 @@ Write-Info "Target: $TargetDir"
 
 # Determine script source
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$LocalScripts = Join-Path $ScriptDir "scripts\vietnamese-ime-patch.ps1"
+$LocalScripts = Join-Path $ScriptDir "scripts\vi-patch.ps1"
 
 if (Test-Path $LocalScripts) {
     Write-Info "Installing from local repo..."
-    Copy-Item "$ScriptDir\scripts\vietnamese-ime-patch.ps1" $TargetDir -Force
-    Copy-Item "$ScriptDir\scripts\vietnamese-ime-patch-core.py" $TargetDir -Force
-    Copy-Item "$ScriptDir\scripts\patch_block_handler.py" $TargetDir -Force
-    Copy-Item "$ScriptDir\scripts\claude-update-wrapper.ps1" $TargetDir -Force
+    Copy-Item "$ScriptDir\scripts\vi-patch.ps1" $TargetDir -Force
+    Copy-Item "$ScriptDir\scripts\vi_patch_core.py" $TargetDir -Force
+    Copy-Item "$ScriptDir\scripts\vi_patch_block_handler.py" $TargetDir -Force
+    Copy-Item "$ScriptDir\scripts\vi-patch-update.ps1" $TargetDir -Force
 } else {
     Write-Info "Downloading scripts from GitHub..."
-    Invoke-WebRequest "$RepoUrl/scripts/vietnamese-ime-patch.ps1" -OutFile "$TargetDir\vietnamese-ime-patch.ps1"
-    Invoke-WebRequest "$RepoUrl/scripts/vietnamese-ime-patch-core.py" -OutFile "$TargetDir\vietnamese-ime-patch-core.py"
-    Invoke-WebRequest "$RepoUrl/scripts/patch_block_handler.py" -OutFile "$TargetDir\patch_block_handler.py"
-    Invoke-WebRequest "$RepoUrl/scripts/claude-update-wrapper.ps1" -OutFile "$TargetDir\claude-update-wrapper.ps1"
+    Invoke-WebRequest "$RepoUrl/scripts/vi-patch.ps1" -OutFile "$TargetDir\vi-patch.ps1"
+    Invoke-WebRequest "$RepoUrl/scripts/vi_patch_core.py" -OutFile "$TargetDir\vi_patch_core.py"
+    Invoke-WebRequest "$RepoUrl/scripts/vi_patch_block_handler.py" -OutFile "$TargetDir\vi_patch_block_handler.py"
+    Invoke-WebRequest "$RepoUrl/scripts/vi-patch-update.ps1" -OutFile "$TargetDir\vi-patch-update.ps1"
 }
 Write-Success "Scripts installed"
 
@@ -78,8 +78,8 @@ if (!(Test-Path $ProfilePath)) {
 $AliasBlock = @"
 
 # Vietnamese IME fix for Claude Code
-function claude-vi-patch { & `"$TargetDir\vietnamese-ime-patch.ps1`" @args }
-function claude-update { & `"$TargetDir\claude-update-wrapper.ps1`" @args }
+function claude-vi-patch { & `"$TargetDir\vi-patch.ps1`" @args }
+function claude-update { & `"$TargetDir\vi-patch-update.ps1`" @args }
 "@
 
 $ProfileContent = Get-Content $ProfilePath -Raw -ErrorAction SilentlyContinue
@@ -93,7 +93,7 @@ if ($ProfileContent -notmatch "claude-vi-patch") {
 # Apply patch
 Write-Host ""
 Write-Info "Applying patch..."
-& "$TargetDir\vietnamese-ime-patch.ps1" patch
+& "$TargetDir\vi-patch.ps1" patch
 
 Write-Host ""
 Write-Host "+================================================================+" -ForegroundColor Green

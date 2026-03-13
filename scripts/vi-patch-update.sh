@@ -5,12 +5,12 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Find patch script - check both local dir and installed location
-if [[ -f "$SCRIPT_DIR/vietnamese-ime-patch.sh" ]]; then
-    PATCH_SCRIPT="$SCRIPT_DIR/vietnamese-ime-patch.sh"
-elif [[ -f "$HOME/.claude/scripts/vietnamese-ime-patch.sh" ]]; then
-    PATCH_SCRIPT="$HOME/.claude/scripts/vietnamese-ime-patch.sh"
+if [[ -f "$SCRIPT_DIR/vi-patch.sh" ]]; then
+    PATCH_SCRIPT="$SCRIPT_DIR/vi-patch.sh"
+elif [[ -f "$HOME/.claude/scripts/vi-patch.sh" ]]; then
+    PATCH_SCRIPT="$HOME/.claude/scripts/vi-patch.sh"
 else
-    echo "Error: vietnamese-ime-patch.sh not found"
+    echo "Error: vi-patch.sh not found"
     exit 1
 fi
 

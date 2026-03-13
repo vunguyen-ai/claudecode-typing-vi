@@ -82,10 +82,10 @@ fi
 
 # Add aliases
 if [[ -n "$SHELL_CONFIG" ]]; then
-    ALIAS_LINE1='alias claude-vn-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"'
+    ALIAS_LINE1='alias claude-vi-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"'
     ALIAS_LINE2='alias claude-update="$HOME/.claude/scripts/claude-update-wrapper.sh"'
 
-    if ! grep -q "claude-vn-patch" "$SHELL_CONFIG" 2>/dev/null; then
+    if ! grep -q "claude-vi-patch" "$SHELL_CONFIG" 2>/dev/null; then
         echo "" >> "$SHELL_CONFIG"
         echo "# Vietnamese IME fix for Claude Code" >> "$SHELL_CONFIG"
         echo "$ALIAS_LINE1" >> "$SHELL_CONFIG"
@@ -96,7 +96,7 @@ if [[ -n "$SHELL_CONFIG" ]]; then
     fi
 else
     log_warn "Could not detect shell config. Add manually:"
-    echo '  alias claude-vn-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"'
+    echo '  alias claude-vi-patch="$HOME/.claude/scripts/vietnamese-ime-patch.sh"'
     echo '  alias claude-update="$HOME/.claude/scripts/claude-update-wrapper.sh"'
 fi
 
@@ -120,7 +120,7 @@ echo "╚═══════════════════════�
 echo ""
 echo -e "${YELLOW}Lệnh khả dụng (sau khi restart terminal hoặc chạy 'source $SHELL_CONFIG'):${NC}"
 echo ""
-echo "  claude-vn-patch        Áp dụng bản vá"
-echo "  claude-vn-patch status Kiểm tra trạng thái"
+echo "  claude-vi-patch        Áp dụng bản vá"
+echo "  claude-vi-patch status Kiểm tra trạng thái"
 echo "  claude-update          Cập nhật Claude + tự động vá"
 echo ""

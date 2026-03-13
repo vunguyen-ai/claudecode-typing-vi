@@ -1,6 +1,6 @@
 #!/bin/bash
 # Claude Code Vietnamese IME Patch - Entry point
-# Usage: claude-vn-patch [patch|restore|status]
+# Usage: claude-vi-patch [patch|restore|status]
 # Requires: vietnamese-ime-patch-core.py
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

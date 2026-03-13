@@ -78,12 +78,12 @@ if (!(Test-Path $ProfilePath)) {
 $AliasBlock = @"
 
 # Vietnamese IME fix for Claude Code
-function claude-vn-patch { & `"$TargetDir\vietnamese-ime-patch.ps1`" @args }
+function claude-vi-patch { & `"$TargetDir\vietnamese-ime-patch.ps1`" @args }
 function claude-update { & `"$TargetDir\claude-update-wrapper.ps1`" @args }
 "@
 
 $ProfileContent = Get-Content $ProfilePath -Raw -ErrorAction SilentlyContinue
-if ($ProfileContent -notmatch "claude-vn-patch") {
+if ($ProfileContent -notmatch "claude-vi-patch") {
     Add-Content -Path $ProfilePath -Value $AliasBlock
     Write-Success "Functions added to PowerShell profile"
 } else {
@@ -109,7 +109,7 @@ Write-Host "+================================================================+" 
 Write-Host ""
 Write-Host "Lenh kha dung (sau khi restart PowerShell):" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  claude-vn-patch        Ap dung ban va" -ForegroundColor White
-Write-Host "  claude-vn-patch status Kiem tra trang thai" -ForegroundColor White
+Write-Host "  claude-vi-patch        Ap dung ban va" -ForegroundColor White
+Write-Host "  claude-vi-patch status Kiem tra trang thai" -ForegroundColor White
 Write-Host "  claude-update          Cap nhat Claude + tu dong va" -ForegroundColor White
 Write-Host ""

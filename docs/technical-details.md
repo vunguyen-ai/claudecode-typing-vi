@@ -181,7 +181,7 @@ shutil.copy(backups[0], cli_js)
 
 2. Check patch is detected:
    ```bash
-   claude-vn-patch status  # Should show "PATCHED"
+   claude-vi-patch status  # Should show "PATCHED"
    ```
 
 3. Test Vietnamese input:

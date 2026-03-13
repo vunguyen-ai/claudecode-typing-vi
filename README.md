@@ -29,12 +29,12 @@ irm https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main/inst
 
 | Command                  | Description                          |
 |--------------------------|--------------------------------------|
-| `claude-vn-patch`        | Apply patch                          |
-| `claude-vn-patch status` | Check patch status                   |
-| `claude-vn-patch restore`| Restore original (remove patch)      |
+| `claude-vi-patch`        | Apply patch                          |
+| `claude-vi-patch status` | Check patch status                   |
+| `claude-vi-patch restore`| Restore original (remove patch)      |
 | `claude-update`          | Update Claude Code + auto re-patch   |
 
-> After every Claude Code update, re-run `claude-vn-patch` or use `claude-update`.
+> After every Claude Code update, re-run `claude-vi-patch` or use `claude-update`.
 
 ---
 
@@ -77,11 +77,11 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 | Error                                | Solution                                                                                                              |
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | Vietnamese input still broken        | Restart Claude Code: `Ctrl+C`, then `claude`                                                                          |
-| `claude-vn-patch: command not found` | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
+| `claude-vi-patch: command not found` | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
 | "Could not find Claude Code cli.js"  | Install via npm: `npm install -g @anthropic-ai/claude-code`                                                           |
 | "Could not extract variables"        | Incompatible Claude Code version. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues) with `claude --version` |
 | "Could not find DEL handling block"  | Claude Code structure changed. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues)               |
-| "Patch already applied"              | Already patched. Check: `claude-vn-patch status`                                                                      |
+| "Patch already applied"              | Already patched. Check: `claude-vi-patch status`                                                                      |
 
 ---
 

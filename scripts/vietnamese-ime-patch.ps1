@@ -1,5 +1,5 @@
 # Claude Code Vietnamese IME Patch - Entry point (Windows)
-# Usage: claude-vn-patch [patch|restore|status]
+# Usage: claude-vi-patch [patch|restore|status]
 
 param(
     [string]$Action = "patch"

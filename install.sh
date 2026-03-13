@@ -107,7 +107,7 @@ fi
 # Apply patch
 echo ""
 log_info "Applying patch..."
-PATCH_RESULT=$("$TARGET_DIR/vipatch.sh" patch 2>&1)
+PATCH_RESULT=$("$TARGET_DIR/vipatch.sh" patch 2>&1) || true
 echo "$PATCH_RESULT"
 
 echo ""

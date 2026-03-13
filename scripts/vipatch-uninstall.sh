@@ -29,10 +29,15 @@ fi
 for CONFIG in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile"; do
     if [[ -f "$CONFIG" ]] && grep -q "claude-vipatch\|vipatch" "$CONFIG" 2>/dev/null; then
         # Remove the alias block (comment + 2 alias lines)
-        sed -i.bak '/# Vietnamese IME fix for Claude Code/d' "$CONFIG"
-        sed -i.bak '/claude-vipatch/d' "$CONFIG"
-        sed -i.bak '/vipatch-update/d' "$CONFIG"
-        rm -f "${CONFIG}.bak"
+        if [[ "$(uname)" == "Darwin" ]]; then
+            sed -i '' '/# Vietnamese IME fix for Claude Code/d' "$CONFIG"
+            sed -i '' '/claude-vipatch/d' "$CONFIG"
+            sed -i '' '/vipatch-update/d' "$CONFIG"
+        else
+            sed -i '/# Vietnamese IME fix for Claude Code/d' "$CONFIG"
+            sed -i '/claude-vipatch/d' "$CONFIG"
+            sed -i '/vipatch-update/d' "$CONFIG"
+        fi
         echo -e "${GREEN}Removed aliases from $CONFIG${NC}"
     fi
 done

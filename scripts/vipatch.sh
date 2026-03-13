@@ -16,7 +16,7 @@ find_cli_js() {
     local claude_path
     if command -v claude &>/dev/null; then
         claude_path=$(which claude)
-        [[ -L "$claude_path" ]] && claude_path=$(readlink -f "$claude_path" 2>/dev/null || echo "")
+        [[ -L "$claude_path" ]] && claude_path=$(readlink "$claude_path" 2>/dev/null || python3 -c "import os; print(os.path.realpath('$claude_path'))" 2>/dev/null || echo "")
         [[ -f "$claude_path" ]] && head -1 "$claude_path" | grep -q "node" && echo "$claude_path" && return 0
     fi
 

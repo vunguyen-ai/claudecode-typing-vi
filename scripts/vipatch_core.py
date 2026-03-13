@@ -142,7 +142,7 @@ def status(cli_js: Path) -> bool:
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: patch-core.py <cli.js> [patch|restore|status]")
+        print("Usage: vipatch_core.py <cli.js> [patch|restore|status]")
         sys.exit(1)
 
     cli_js = Path(sys.argv[1])

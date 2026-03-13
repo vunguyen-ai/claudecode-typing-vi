@@ -55,6 +55,7 @@ if [[ -n "$SCRIPT_DIR" && -f "$SCRIPT_DIR/scripts/vipatch.sh" ]]; then
     cp "$SCRIPT_DIR/scripts/vipatch_core.py" "$TARGET_DIR/"
     cp "$SCRIPT_DIR/scripts/vipatch_block_handler.py" "$TARGET_DIR/"
     cp "$SCRIPT_DIR/scripts/vipatch-update.sh" "$TARGET_DIR/"
+    cp "$SCRIPT_DIR/scripts/vipatch-uninstall.sh" "$TARGET_DIR/"
 else
     # Remote installation via curl
     log_info "Downloading scripts from GitHub..."
@@ -62,12 +63,14 @@ else
     curl -fsSL "$REPO_URL/scripts/vipatch_core.py" -o "$TARGET_DIR/vipatch_core.py"
     curl -fsSL "$REPO_URL/scripts/vipatch_block_handler.py" -o "$TARGET_DIR/vipatch_block_handler.py"
     curl -fsSL "$REPO_URL/scripts/vipatch-update.sh" -o "$TARGET_DIR/vipatch-update.sh"
+    curl -fsSL "$REPO_URL/scripts/vipatch-uninstall.sh" -o "$TARGET_DIR/vipatch-uninstall.sh"
 fi
 
 # Make executable
 chmod +x "$TARGET_DIR/vipatch.sh"
 chmod +x "$TARGET_DIR/vipatch_core.py"
 chmod +x "$TARGET_DIR/vipatch-update.sh"
+chmod +x "$TARGET_DIR/vipatch-uninstall.sh"
 log_success "Scripts installed"
 
 # Detect shell config

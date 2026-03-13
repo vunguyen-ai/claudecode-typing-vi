@@ -9,19 +9,13 @@
 
 ## Install
 
-### macOS / Linux
-
 ```bash
 curl -fsSL https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main/install.sh | bash
 ```
 
-### Windows (PowerShell as Admin)
-
-```powershell
-irm https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main/install.ps1 | iex
-```
-
 **Restart Claude Code after patching** (`Ctrl+C`, then `claude`).
+
+> **Windows users:** Run this in [Git Bash](https://git-scm.com/downloads) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 ---
 
@@ -29,9 +23,9 @@ irm https://raw.githubusercontent.com/vunguyen-ai/claudecode-typing-vi/main/inst
 
 | Command                  | Description                          |
 |--------------------------|--------------------------------------|
-| `claude-vipatch`        | Apply patch                          |
-| `claude-vipatch status` | Check patch status                   |
-| `claude-vipatch restore`| Restore original (remove patch)      |
+| `claude-vipatch`         | Apply patch                          |
+| `claude-vipatch status`  | Check patch status                   |
+| `claude-vipatch restore` | Restore original (remove patch)      |
 | `claude-update`          | Update Claude Code + auto re-patch   |
 
 > After every Claude Code update, re-run `claude-vipatch` or use `claude-update`.
@@ -77,11 +71,11 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 | Error                                | Solution                                                                                                              |
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | Vietnamese input still broken        | Restart Claude Code: `Ctrl+C`, then `claude`                                                                          |
-| `claude-vipatch: command not found` | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
+| `claude-vipatch: command not found`  | Restart terminal or `source ~/.zshrc` / `source ~/.bashrc`                                                            |
 | "Could not find Claude Code cli.js"  | Install via npm: `npm install -g @anthropic-ai/claude-code`                                                           |
 | "Could not extract variables"        | Incompatible Claude Code version. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues) with `claude --version` |
 | "Could not find DEL handling block"  | Claude Code structure changed. [Open issue](https://github.com/vunguyen-ai/claudecode-typing-vi/issues)               |
-| "Patch already applied"              | Already patched. Check: `claude-vipatch status`                                                                      |
+| "Patch already applied"              | Already patched. Check: `claude-vipatch status`                                                                       |
 
 ---
 
@@ -90,8 +84,18 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 | Requirement    | Details                                              |
 |----------------|------------------------------------------------------|
 | **Python**     | 3.6+                                                 |
+| **Bash**       | macOS/Linux (built-in), Windows ([Git Bash](https://git-scm.com/downloads) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)) |
 | **Claude Code**| Installed via npm: `npm install -g @anthropic-ai/claude-code` |
-| **OS**         | Windows, macOS, or Linux                             |
+
+---
+
+## Uninstall
+
+```bash
+~/.claude/scripts/vipatch-uninstall.sh
+```
+
+Restores original `cli.js`, removes all scripts, cleans shell aliases, then self-deletes.
 
 ---
 
@@ -99,59 +103,24 @@ for (const c of _sk) _ns = _ns.insert(c);  // Insert survivors
 
 ```
 claudecode-typing-vi/
-├── install.sh                           # Installer (macOS/Linux)
-├── install.ps1                          # Installer (Windows)
+├── install.sh                           # Installer
 ├── LICENSE
 ├── README.md
 └── scripts/
-    ├── vipatch.sh                      # Entry point (Bash)
-    ├── vipatch.ps1                     # Entry point (PowerShell)
-    ├── vipatch_core.py                 # Core patching logic
-    ├── vipatch_block_handler.py        # Block replacement module
-    ├── vipatch-update.sh               # Update + patch (Bash)
-    └── vipatch-update.ps1              # Update + patch (PowerShell)
-```
-
----
-
-## Uninstall
-
-### macOS / Linux
-
-```bash
-# 1. Restore original cli.js
-claude-vipatch restore
-
-# 2. Remove all scripts (all prefixed with vipatch)
-rm -f ~/.claude/scripts/vipatch*
-
-# 3. Remove aliases from ~/.zshrc or ~/.bashrc — delete these lines:
-#    # Vietnamese IME fix for Claude Code
-#    alias claude-vipatch="$HOME/.claude/scripts/vipatch.sh"
-#    alias claude-update="$HOME/.claude/scripts/vipatch-update.sh"
-```
-
-### Windows (PowerShell)
-
-```powershell
-# 1. Restore original cli.js
-claude-vipatch restore
-
-# 2. Remove all scripts (all prefixed with vipatch)
-Remove-Item "$env:USERPROFILE\.claude\scripts\vipatch*" -Force
-
-# 3. Edit PowerShell profile — remove claude-vipatch and claude-update functions
-notepad $PROFILE.CurrentUserAllHosts
+    ├── vipatch.sh                       # Entry point
+    ├── vipatch_core.py                  # Core patching logic
+    ├── vipatch_block_handler.py         # Block replacement module
+    ├── vipatch-update.sh                # Update Claude Code + re-patch
+    └── vipatch-uninstall.sh             # Uninstaller (self-deleting)
 ```
 
 ---
 
 ## Credits
 
-Original idea: 
-- [manhit96/claude-code-vietnamese-fix](https://github.com/manhit96/claude-code-vietnamese-fix)  
-- https://github.com/hangocduong/sua-loi-nhap-lieu-tieng-viet-claude-code-cli  
-
+Original idea:
+- [manhit96/claude-code-vietnamese-fix](https://github.com/manhit96/claude-code-vietnamese-fix)
+- https://github.com/hangocduong/sua-loi-nhap-lieu-tieng-viet-claude-code-cli
 
 ## License
 

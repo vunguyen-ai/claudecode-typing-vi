@@ -9,6 +9,16 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
+# Resolve HOME for Windows environments (Git Bash + WSL)
+if [[ -z "$HOME" && -n "$USERPROFILE" ]]; then
+    HOME=$(cygpath -u "$USERPROFILE" 2>/dev/null || echo "$USERPROFILE")
+elif grep -qi "microsoft\|wsl" /proc/version 2>/dev/null; then
+    _WIN_PROFILE=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')
+    if [[ -n "$_WIN_PROFILE" && "$_WIN_PROFILE" != *"%"* ]]; then
+        HOME=$(wslpath -u "$_WIN_PROFILE" 2>/dev/null || echo "$_WIN_PROFILE")
+    fi
+fi
+
 SCRIPT_DIR="$HOME/.claude/scripts"
 SELF="$SCRIPT_DIR/vipatch-uninstall.sh"
 
